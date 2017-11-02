@@ -1,0 +1,12 @@
+<div class="schedules" ng-switch="panel">
+    <div ng-switch-when="view">
+        <div ng-include="'/components/schedules/view-schedule/view-schedule.html'"></div>
+    </div>
+    <div ng-switch-when="edit">
+        <div ng-include="'/components/schedules/edit-schedule/edit-schedule.html'"></div>
+    </div>
+    <div ng-switch-default class="main no-schedule">
+        <h1>No Schedule Selected</h1>
+        <p class="no-content">Please select a group from the sidebar</p>
+    </div>
+</div>

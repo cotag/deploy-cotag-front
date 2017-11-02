@@ -1,0 +1,12 @@
+<div class="main new" ng-controller="NewPlaylistCtrl">
+    <h1>New Playlist</h1>
+    <validated-form submit-fn="create" model="playlist">
+        <form-field model="name"></form-field>
+        <form-field model="default_duration"></form-field>
+        <form-select model="group_id" source="Group" options="groupOptions"></form-select>
+        <form-checkbox model="random"></form-checkbox>
+        <form-actions>
+            <form-submit>Create</form-submit>
+        </form-actions>
+    </validated-form>
+</div>

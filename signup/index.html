@@ -1,0 +1,131 @@
+<!doctype html>
+<html class="login">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Sign Up</title>
+        <link rel="stylesheet" href="/styles/auth.css">
+        <script src="/scripts/signup.js"></script>
+    </head>
+    <body>
+        <article>
+            <header>
+                <!-- TODO: switch logo depending on customer -->
+                <img src="/layout/images/logos/oh/logo.png">
+                Sign Up
+            </header>
+            <p class="desc">Create an account with us, or sign up with your Google, Facebook or Twitter account by <a href="/login">logging in here</a>.</p>
+            <form accept-charset="UTF-8" action="/auth/signup" id="signup-form">
+                <label for="name">Name:</label>
+                <input name="name" type="text" placeholder="Name" class="first" id="name">
+                <label for="email">Email:</label>
+                <input name="email" type="text" placeholder="Email" id="email">
+                <label for="password">Password:</label>
+                <input name="password" type="password" placeholder="Password" id="password">
+                <label for="password_confirmation">Confirm:</label>
+                <input name="password_confirmation" type="password" placeholder="Confirm" class="last" id="confirmation">
+                <p>
+                    <input type="submit" value="Sign Up">
+                </p>
+                <p id="error" style="display: none;"><span style="display: none"></span></p>
+            </form>
+            <p>Already signed up? <a href="/login">Log in here</a></p>
+        </article>
+        <script>
+            // ---------------------------
+            // error messages
+            // ---------------------------
+            var failedSocialError = 'Sorry, we couldn\'t sign you up because another account is using the same email address. Please try logging in using another account, or sign up using this form instead.';
+            var defaultError = 'Sorry, there was an error creating your account. Please try again, or sign up using one of the social links below.';
+            var loggedInError = 'You are already logged in. To create a new account, please log out before continuing.';
+            var passwordValidationError = 'Your password and confirmation don\'t match. Please enter them again.';
+            var emailValidationError = 'Sorry, an account with this email address already exists.';
+            var emptyValidationError = 'Please ensure the form is complete before continuing.';
+
+            function showError(text) {
+                $('#error span').text(text);
+                $('#error').slideDown('fast', function() {
+                    $('#error span').fadeIn();
+                });
+            }
+
+
+            // ---------------------------
+            // redirect from failed social
+            // ---------------------------
+            function parseQueryParams() {
+                // slice(1) strips '?' prefix
+                var parts = window.location.search.slice(1).split('&');
+                var params = {};
+
+                for (var i = 0; i < parts.length; ++i) {
+                    name_val = parts[i].split('=');
+                    if (name_val.length == 1)
+                        continue;
+                    params[name_val[0]] = decodeURIComponent(name_val[1]).replace('+', ' ');
+                }
+
+                return params;
+            }
+
+            var params = parseQueryParams();
+
+            if (params.name || params.first_name || params.email) {
+                showError(failedSocialError);
+            }
+
+            if (params.name)
+                $('#name').val(params.name);
+            else if (params.first_name)
+                $('#name').val(params.first_name + ' ' + params.last_name);
+
+            if (params.email)
+                $('#email').val(params.email);
+
+
+            // ---------------------------
+            // form submission
+            // ---------------------------
+            $('#signup-form').submit(function(event) {
+                event.preventDefault();
+                var form = $(this);
+
+                // simple validations: no fields empty and
+                // passwords match
+                var empty = false;
+                form.find('input[type=text], input[type=email], input[type=password]').each(function(i, el) {
+                    var input = $(el);
+                    if (input.val() == '') {
+                        input.addClass('validation-error');
+                        empty = true;
+                    } else {
+                        input.removeClass('validation-error');
+                    }
+                });
+
+                if (empty) {
+                    showError(emptyValidationError);
+                    return;
+                } else if ($('#password').val() != $('#confirmation').val()) {
+                    $('#password').addClass('validation-error');
+                    $('#confirmation').addClass('validation-error');
+                    showError(passwordValidationError);
+                    return;
+                }
+
+                $.post(form.attr('action'), form.serialize())
+                    .done(function() {
+                        window.location = '/login_success.html';
+                    })
+                    .error(function(resp) {
+                        if (resp.status == 403)
+                            showError(loggedInError);
+                        else if (resp.status == 409)
+                            showError(emailValidationError);
+                        else
+                            showError(defaultError);
+                    });
+            });
+        </script>
+    </body>
+</html>

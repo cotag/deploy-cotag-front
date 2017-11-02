@@ -1,0 +1,14 @@
+<div id="user-profile" ng-controller="ProfileCtrl">
+    <div class="profile-image">
+        <img ng-src="https://www.gravatar.com/avatar/{{$root.currentUser.email_digest}}?s=300&d=mm" />
+    </div>
+
+    <div class="profile-main">
+        <h1 class="user-name" ng-bind="$root.currentUser.name"></h1>
+
+        <ul class="user-overview">
+            <li ng-bind="$root.currentUser.email"></li>
+            <li ng-bind="$root.currentUser.nickname"></li>
+        </ul>
+    </div>
+</div>

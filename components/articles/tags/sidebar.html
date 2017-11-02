@@ -1,0 +1,57 @@
+<div
+    class="tags-wrapper"
+    ng-controller="TagsCtrl"
+>
+	<div class="tags-header">
+        <span ng-if="article.media_type_name == 'Image' || article.media_type_name == 'Webpage'">
+            <h1 class="tags-title">Comments</h1>
+            <button ng-if="authenticated" class="add-tag" ng-click="add_moment()">Comment</button>
+        </span>
+        <span ng-if="article.media_type_name != 'Image' && article.media_type_name != 'Webpage'">
+	       <h1 class="tags-title">Moments</h1>
+            <button ng-if="authenticated" class="add-tag" ng-click="add_moment()">Tag @ {{article.momentInTime | duration:momentInTime}}</button>
+        </span>
+
+        <form
+            ng-submit="add_moment()"
+            id="new-moment-form"
+            class="animated"
+            ng-touch="$event.stopPropagation()"
+            user-select="true"
+            no-capture
+            novalidate
+
+            ng-if="authenticated"
+        >
+            <textarea
+                placeholder=""
+                ng-model="moment.comment"
+                msd-elastic
+            ></textarea>
+        </form>
+
+        <div style="display: block; clear: both" ng-if="!authenticated">
+                Login to comment
+        </div>
+	</div>
+    <div class="tags" 
+        update-pretties
+        infinite-scroll="moreComments()"
+        infinite-scroll-disabled="commentsLoading"
+        infinite-scroll-distance="0.2"
+    >
+        <div ng-repeat="tag in comments | orderBy:'moment' track by tag.id">
+            <comment model="tag" article="article"></comment>
+        </div>
+
+        <div class="no-tags" ng-if="!commentsLoading && comments.length === 0">
+            <p>
+                Be the first to comment on this {{article.media_type_name | lowercase}}
+            </p>
+        </div>
+
+        <div ng-if="commentsLoading">
+            <div class="spinner"></div>
+        </div>
+    </div>
+</div>

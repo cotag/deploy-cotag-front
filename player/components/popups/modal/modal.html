@@ -1,0 +1,9 @@
+<article id="modal-popup" ng-show="current === 'modal'" ng-touch="$event.stopPropagation()" user-select="true" no-capture>
+    <h1>{{$root.modalTitle}}</h1>
+    <p html-compile="$root.modalDescription"></p>
+    <menu>
+        <a href="#" ng-show="!$root.modalOkOnly" class="cancel button" ng-click="cancel()">Cancel</a>
+        <a href="#" class="ok button" ng-click="ok()">OK</a>
+    </menu>
+    <div style="clear: both"></div>
+</article>

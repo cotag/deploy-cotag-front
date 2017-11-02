@@ -1,0 +1,80 @@
+<div class="main view" ng-controller="ViewGroupCtrl">
+    <h1>{{group.name}}</h1>
+    <tabset>
+        <tab name="About">
+            <div class="membership-actions">
+                <div ng-show="!group.member && (!group.invite_only || $root.currentUser.sys_admin)">
+                    <p>This group is <span ng-if="!group.invite_only">public</span><span ng-if="group.invite_only && $root.currentUser.sys_admin">private, but you are seeing it because you are an administrator</span>. You can join it immediately to upload and view content in the group.</p>
+                    <menu><a href="#" class="button" ng-click="join()">Join this group</a></menu>
+                </div>
+                <div ng-show="group.member">
+                    <p>You are a member of this group.</p>
+                    <span ng-show="group.admins.length == 1 && group.admins[0] == $root.currentUser.id">
+                        <p>You are the only admin of this group. To leave the group, add a new admin.</p>
+                    </span>
+                    <span ng-show="group.admins.length > 1 || (group.admins.length == 1 && group.admins[0] != $root.currentUser.id)">
+                        <menu><a href="#" class="button" ng-click="removeMember($root.currentUser)">Leave Group</a></menu>
+                    </span>
+                </div>
+            </div>
+            <p ng-bind-html="group.description | newlines"></p>
+        </tab>
+
+        <tab name="Edit" show="$parent.$parent.group.can_admin">
+            <validated-form submit-fn="save" model="group">
+                <form-field model="name"></form-field>
+                <form-text-area model="description"></form-text-area>
+                <form-checkbox model="invite_only"></form-checkbox>
+                <form-checkbox model="signage" ng-if="$root.currentAuthority.signage"></form-checkbox>
+                <form-actions>
+                    <form-reset hide-until-changed>Cancel</form-reset>
+                    <form-submit>Save</form-submit>
+                </form-actions>
+            </validated-form>
+            <hr>
+            <p><button class="delete" ng-click="delete()">Delete</button>Deleting this group will immediately delete all uploads and comments in the group.</p>
+        </tab>
+
+        <tab name="Members">
+            <div ng-show="group.can_admin" class="invite-widget">
+                <span>Invite a new member to this group:</span>
+                <div>
+                    <search-select model="$parent.$parent.$parent.selectedUserID" placeholder="select user" source="User"></search-select>
+                    <a ng-class="{button: true, disabled: !$parent.$parent.$parent.selectedUserID}" ng-click="invite()">Invite</a>
+                    <span class="error" ng-show="inviteErrors">{{inviteErrors}}</span>
+                    <span class="success" ng-show="inviteSuccess">{{inviteSuccess}}</span>
+                </div>
+            </div>
+            <table ng-show="group.members.length > 0">
+                <tr>
+                    <th>Name</th>
+                    <th class="admin">Admin</th>
+                    <th class="remove" ng-if="group.can_admin"></th>
+                </tr>
+                <tr ng-repeat="user in group.members track by user.id">
+                    <td>{{user.name}}</td>
+                    <td class="admin">
+                        <input type="checkbox"
+                            ng-model="user.admin"
+                            ng-change="toggleAdmin(user)"
+                            ng-if="group.can_admin && (!user.admin || group.admins.length > 1)"
+                        >
+                        <span ng-if="group.can_admin && (user.admin || group.admins.length <= 1)">Yes</span>
+                        <span ng-if="!group.can_admin">
+                            <span ng-if="user.admin">Yes</span>
+                            <span ng-if="!user.admin">No</span>
+                        </span>
+                    </td>
+                    <td class="remove" ng-if="group.can_admin">
+                        <a href="#" ng-click="removeMember(user)"
+                            ng-if="!user.admin || group.admins.length > 1"
+                        >
+                            Remove
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <p ng-show="group.members.length == 0">There are no members in this group.</p>
+        </tab>
+    </tabset>
+</div>

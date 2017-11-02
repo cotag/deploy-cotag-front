@@ -1,0 +1,28 @@
+<div 
+    upload-main 
+    class="upload-container"
+    ng-controller="UploadsSidebarCtrl"
+>
+    <orbicular resize progress="selected.progress" total="selected.size">
+        <div class="co-circle drop"></div>
+        <div>
+            <p class="no-margin">
+                <img src="/components/uploads/images/uploadcloud.svg" alt="dnd upload" />
+            </p>
+            <p>Drag &amp; Drop</p>
+            <p>to Upload</p>
+        </div>
+    </orbicular>
+
+    <div class="button" id="selectFiles">
+        <form>
+            <span>
+                Select files
+                <img src="/components/uploads/images/select-to-upload.svg" alt="upload" />
+            </span>
+            <input type="file" multiple />
+        </form>
+    </div>
+
+    <button ng-click="showAddPopup()">Add Webpage</button>
+</div>

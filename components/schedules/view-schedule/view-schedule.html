@@ -1,0 +1,69 @@
+<div class="main view" ng-controller="ViewScheduleCtrl">
+    <div id="popover-cover" ng-click="closePopovers()" ng-class="{show: editingGroup}"></div>
+    <h1>
+        <span>{{group.name}}</span>
+        <div>
+            <ui-select ng-model="playlist.selected" theme="select2" ng-touch="$event.stopPropagation()" user-select="true" no-capture id="default-playlist" title="select default">
+                <ui-select-match placeholder="select default">
+                    <div class="select-list-image selected">
+                        <div class="thumbnail" style="background-image: url({{playlist.selected.poster_url}})"></div>
+                        {{playlist.selected.display_name}}
+                    </div>
+                </ui-select-match>
+                <ui-select-choices refresh="findPlaylist($select.search, true, playlist)" refresh-delay="300" repeat="item in playlist.playlists track by $index">
+                    <div class="select-list-image">
+                        <div class="thumbnail" ng-style="{'background-image': 'url({{item.poster_url}})'}"></div>
+                        {{item.display_name}}
+                    </div>
+                </ui-select-choices>
+            </ui-select>
+
+            <menu id="view-toggle">
+                <a ng-class="{selected: calendar}" ng-click="showCalendar(true)"><span class="pe-7s-date"></span></a>
+                <a ng-class="{selected: !calendar}" ng-click="showCalendar(false)"><span class="pe-7s-menu"></span></a>
+            </menu>
+        </div>
+    </h1>
+
+    <div class="content" ng-class="{hide_cal: !calendar}">
+        <div class="schedules calendar">
+            <div ui-calendar="calendarConfig" ng-model="eventSources" calendar="schedules"></div>
+        </div>
+    </div>
+    <div ng-show="!calendar" class="content" id="list-view">
+        <p ng-show="group.schedules.length == 0" class="no-content">No Schedules</p>
+        <table ng-show="group.schedules.length > 0">
+            <tr>
+                <th>Playlist</th>
+                <th class="edit"></th>
+                <th class="remove"></th>
+            </tr>
+            <tr ng-repeat="schedule in group.schedules | orderBy:'start_date' track by schedule.id">
+                <td>{{schedule.playlist_name}} - {{dateText(schedule.start_date)}} <span class="pe-7s-attention" ng-if="schedule.incompatible" title="{{schedule.incompatible}}"></span></td>
+                <td class="edit">
+                    <a href="#" ng-click="selectSchedule(schedule)">Edit</a>
+                </td>
+                <td class="remove">
+                    <a href="#" ng-click="removeSchedule(schedule)">Remove</a>
+                </td>
+            </tr>
+        </table>
+        <div id="schedule-playlist">
+            <ui-select ng-model="$parent.schedule_playlists.selected" theme="select2" id="schedule-playlist-menu" title="select playlist">
+                <ui-select-match placeholder="select playlist">
+                    <div class="select-list-image selected">
+                        <div class="thumbnail" style="background-image: url({{schedule_playlists.selected.poster_url}})"></div>
+                        {{schedule_playlists.selected.display_name}}
+                    </div>
+                </ui-select-match>
+                <ui-select-choices refresh="findPlaylist($select.search, false, schedule_playlists)" refresh-delay="300" repeat="item in schedule_playlists.playlists track by $index">
+                    <div class="select-list-image">
+                        <div class="thumbnail" ng-style="{'background-image': 'url({{item.poster_url}})'}"></div>
+                        {{item.display_name}}
+                    </div>
+                </ui-select-choices>
+            </ui-select>
+            <button ng-click="addSchedule()">Schedule Playlist</button>
+        </div>
+    </div>
+</div>

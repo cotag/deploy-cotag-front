@@ -1,0 +1,330 @@
+<!doctype html>
+<!--[if IE 9]>
+<html ng-app="CoTag" ng-controller="AppCtrl" class="ie9">
+<![endif]-->
+<!--[if !IE]><!-->
+<html ng-app="CoTag" ng-controller="AppCtrl"> 
+<!--<![endif]-->
+  <head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>CoTag</title>
+    <meta name="description" content="moments in video">
+
+    <!--
+      http://www.mollerus.net/tom/blog/2010/06/web_app_homescreen_icons_in_android.html
+      https://developer.apple.com/library/ios/#documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html
+      http://blogs.msdn.com/b/ie/archive/2012/04/03/pinned-sites-in-windows-8.aspx
+      http://blogs.msdn.com/b/ie/archive/2012/06/08/high-quality-visuals-for-pinned-sites-in-windows-8.aspx
+      http://www.xiconeditor.com/
+     -->
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/layout/favicon/16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/layout/favicon/32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/layout/favicon/48.png" sizes="48x48">
+    <link rel="icon" type="image/png" href="/layout/favicon/64.png" sizes="64x64">
+    <link rel="icon" type="image/png" href="/layout/favicon/128.png" sizes="128x128">
+
+    <!-- MS Application Icon -->
+    <meta name="application-name" content="CoTag">
+    <meta name="msapplication-tooltip" content="Moments in video">
+    <meta name="msapplication-starturl" content="./">
+    <meta name="msapplication-navbutton-color" content="#8DC63F">
+    <meta name="msapplication-TileImage" content="/layout/favicon/144_win8.png" />
+    <meta name="msapplication-TileColor" content="#B22214" />
+
+    <!-- Apple Application Icon -->
+    <link rel="apple-touch-icon" href="/layout/favicon/57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/layout/favicon/72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/layout/favicon/114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/layout/favicon/144.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Hide things until page is loaded -->
+    <style>
+        div#loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            padding-top: 4em;
+            text-align: center;
+
+            background-color: white;
+            color: black;
+            z-index: 999999;
+
+            -webkit-transition: opacity linear 0.3s;
+            transition: opacity linear 0.3s;
+            opacity: 1;
+        }
+
+        div#loading.ng-leave {
+          opacity: 1;
+        }
+
+        div#loading.ng-leave.ng-leave-active {
+          opacity: 0;
+        }
+
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/layout/select2/select2.css">
+
+    <link rel="stylesheet" href="/styles/all.css">
+
+
+
+    <!-- custom branding based on the current authority -->
+    <link ng-if="$root.currentAuthority.branding" rel="stylesheet" ng-href="{{$root.currentAuthority.branding}}">
+  </head>
+  <body
+    ng-controller="NavCtrl"
+    ng-swipe-left="hideNav()"
+    ng-swipe-right="showNav()"
+
+    drag-begin="dragStartNav($event)"
+    ng-drag="dragNav($event)"
+    drag-stop="dragEndNav()"
+    drag-directions="'left right'"
+
+    touch-action="pan-y"
+    drag-y-axis="false"
+    user-select="true"
+
+    ng-class="{
+        navAnimate: navAnimate,
+        navDecorate: navDecorate,
+        navOpen: navOpen,
+        noAuth: !authenticated
+    }"
+
+    co-uploads
+  >
+    <!--
+        Show a loading screen until we know if we are authenticated or not
+    
+    <div id="loading" ng-if="authenticated === undefined">
+        <h1>Loading...</h1>
+        <div>
+            <div class="spinner"></div>
+        </div>
+    </div>
+     -->
+
+    <div
+        id="touch-overlay" 
+        ng-touch="toggleNav()"
+    >
+        <!--
+            For closing the mobile sidebar when it is showing
+            Provides a touch area over the sliver of the visible content
+         -->
+    </div>
+
+    <header 
+        class="promote-layer" 
+        ng-touch="$event.stopPropagation()" 
+        user-select="true" 
+        no-capture
+        ng-controller="HeaderCtrl"
+    >
+        <div class="logo large"></div>
+
+        <!-- Promote search to fix text input glitches in webkit -->
+        <div id="header-search" class="promote-layer">
+            <input ng-model="query" type="text">
+            <div id="header-search-magnifier"></div>
+        </div>
+
+        <div class="user" ng-if="authenticated" ng-click="$root.showLogoutPanel = !$root.showLogoutPanel">
+            <div class="avatar-img-wrapper">
+                <img ng-src="https://www.gravatar.com/avatar/{{currentUser.email_digest}}?s=33&d=mm">
+            </div>
+            <div class="name">{{currentUser.name}}</div>
+        </div>
+        <div class="login" ng-if="!authenticated">
+            <a href="#" ng-click="login()">Sign In</a>
+        </div>
+
+        <span id="show-menu" ng-touch="toggleNav()">
+            <div class="logo small"></div>
+        </span>
+
+        <div id="logout-panel-click-capture" ng-show="$root.showLogoutPanel" ng-click="$root.showLogoutPanel = false"></div>
+        <div class="popover" ng-if="authenticated" id="logout-panel" ng-show="$root.showLogoutPanel">
+            <div id="logout-panel-avatar-img-wrapper" ng-click="$root.showLogoutPanel = false" goto="profile">
+                <img ng-src="https://www.gravatar.com/avatar/{{currentUser.email_digest}}?s=45&d=mm">
+            </div>
+            <div id="logout-panel-user-details">
+                <p ng-click="$root.showLogoutPanel = false" goto="profile">{{currentUser.name}}</p>
+                <p ng-click="$root.showLogoutPanel = false" goto="profile">{{currentUser.email}}</p>
+                <a class="button" href="#" ng-click="logout()">Sign Out</a>
+                <!--a class="button" href="#" ng-click="remember()" id="remember-button">Remember</a-->
+            </div>
+        </div>
+    </header>
+
+
+    <aside class="promote-layer">
+      <div id="aside-wrapper">
+        <!-- 
+          This is only shown on mobile
+          We use ng-click to prevent ghost clicks on iOS and android
+        -->
+        <div id="nav-buffer">
+            <div class="logo large"></div>
+            <div class="account-actions">
+                <div class="user" ng-if="authenticated">
+                    <div class="icon pe-7s-power" ng-click="logout()"></div>
+                    <span>
+                        <span class="logout" ng-click="logout()">Sign Out</span>
+                        <span class="name">{{currentUser.name}}</span>
+                    </span>
+                </div>
+                <div class="login" ng-if="!authenticated">
+                    <span ng-click="login()">Sign In</span>
+                </div>
+            </div>
+        </div>
+      
+        <!-- Primary navigation -->
+        <div id="nav-wrapper">
+          <nav>
+            <a goto="discover">Media</a>
+            <a goto="uploads">Uploads</a>
+            <a goto="profile">Profile</a>
+            <a goto="playlists" ng-if="currentUser.show_playlists()">Playlists</a>
+            <a goto="schedules" ng-if="currentUser.show_schedules()">Schedules</a>
+            <a goto="channels" ng-if="currentUser.show_channels()">Channels</a>
+            <a goto="groups">
+                <div class="notification-count" ng-show="$root.pendingInvites > 0">{{$root.pendingInvites}}</div>
+                Groups
+            </a>
+          </nav>
+
+          <!-- This is the supporting content section -->
+          <section id="sidescroll" ng-touch="$event.stopPropagation()" on-target>
+            <div ng-switch="$route.current.name">
+                <div ng-switch-when="discover">
+                    <div ng-include="'/components/discover/sidebar.html'">
+                    </div>
+                </div>
+                <div ng-switch-when="groups">
+                    <div ng-include="'/components/groups/sidebar.html'">
+                    </div>
+                </div>
+                <div ng-switch-when="player">
+                    <div ng-include="'/components/articles/tags/sidebar.html'">
+                    </div>
+                </div>
+                <div ng-switch-when="uploads">
+                    <div ng-include="'/components/uploads/sidebar.html'">
+                    </div>
+                </div>
+                <div ng-switch-when="profile">
+                    <div ng-include="'/components/profile/sidebar.html'">
+                    </div>
+                </div>
+                <div ng-switch-when="playlists">
+                    <div ng-include="'/components/playlists/sidebar.html'">
+                    </div>
+                </div>
+                <div ng-switch-when="schedules">
+                    <div ng-include="'/components/schedules/sidebar.html'">
+                    </div>
+                </div>
+                <div ng-switch-when="channels">
+                    <div ng-include="'/components/channels/sidebar.html'">
+                    </div>
+                </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Video player
+        We break it out of a view so we can seamlessly continue
+        playing while the user searches for content.
+        Moving from fixed position to inline.
+     -->
+    <article class="player"
+        ng-controller="PlayerCtrl"
+        ng-dbl-click="toggleFullscreen()"
+        ng-class="{
+            hide: !mediaSelected,
+            breakout: doBreakout,
+            fullscreen: goFullscreen
+        }"
+    >
+        <div ng-switch="mediaSelected.media_type">
+            <!-- TODO:: add different players -->
+            <div ng-switch-when="3">
+                <video-player video="mediaSelected" fullscreen="goFullscreen" height="mediaHeight"></video-player>
+            </div>
+
+            <div ng-switch-when="1" id="image-preview">
+                <div ng-style="{'background-image': 'url(' + mediaSelected.default_media_url + ')'}"></div>
+            </div>
+
+            <div ng-switch-when="4" id="webpage">
+                <iframe frameborder="0" sandbox="allow-same-origin allow-scripts allow-forms" ng-src="{{trustSrc(mediaSelected.default_media_url)}}"></iframe>
+            </div>
+
+            <!-- This removes any playing element from the DOM -->
+            <div ng-switch-default></div>
+        </div>
+    </article>
+
+    <main 
+        ng-view 
+        ng-class="{noTopPad: $route.current.name === 'player'}"
+    >
+    </main>
+
+    <!-- Hidden pop-ups as directive -->
+    <section ng-click="closePopup()" user-select="true" no-capture ng-if="$root.currentPopup !== undefined" class="popups ng-cloak">
+        <div class="page">
+            <div>
+                <div current="$root.currentPopup" livestream-popup></div>
+                <div current="$root.currentPopup" article-popup></div>
+                <div current="$root.currentPopup" modal-popup></div>
+                <div current="$root.currentPopup" add-webpage-popup></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- notifications are displayed here -->
+    <div class="notifications" growl-notifications></div>
+
+    <script src="/scripts/app.js"></script>
+
+    <!-- Used to suppress upload failure as IE9 doesn't support -->
+    <!--[if IE 9]>
+        <script>
+            window.isIE9 = true;
+        </script>
+    <![endif]-->
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-53829412-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<div id="add-webpage-popup" ng-show="current == 'add-webpage'">
+    <h1>Add Webpage</h1>
+    <!-- <ul>
+        <li class="url selected"><i class="pe-7s-global"></i>Web Page</li>
+        <li class="stream"><i class="pe-7s-video"></i>Stream</li>
+    </ul> -->
+    <div ng-if="current == 'add-webpage'">
+        <validated-form submit-fn="create" cancel-fn="cancel" model="article">
+            <form-field model="title"></form-field>
+            <form-field model="url" label="URL"></form-field>
+            <form-select model="group_id" source="Group" options="{query: {mine: true}}"></form-select>
+            <form-select model="article_id" source="Article" options="" id-text="title" label="Thumbnail"></form-select>
+            <form-actions>
+                <form-submit>OK</form-submit>
+                <form-cancel>Cancel</form-cancel>
+            </form-actions>
+        </validated-form>
+    </div>
+</div>

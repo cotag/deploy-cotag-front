@@ -1,0 +1,22 @@
+<div class="main new" ng-controller="NewChannelCtrl">
+    <h1>New Channel</h1>
+    <validated-form submit-fn="create" model="channel">
+        <form-field model="name"></form-field>
+        <form-select label="Managed by Group" model="group_id" source="Group" options="groupOptions"></form-select>
+        <form-field model="location"></form-field>
+        <form-select model="display_type">
+            <option value="1">Screensaver</option>
+            <option value="2">Projector</option>
+            <option value="3">LCD</option>
+        </form-select>
+        <form-select model="orientation">
+            <option value="1">Other</option>
+            <option value="2">Portrait</option>
+            <option value="3">Landscape</option>
+        </form-select>
+        <form-checkbox model="monitored"></form-checkbox>
+        <form-actions>
+            <form-submit>Create</form-submit>
+        </form-actions>
+    </validated-form>
+</div>

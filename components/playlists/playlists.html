@@ -1,0 +1,12 @@
+<div class="playlists" ng-switch="panel">
+    <div ng-switch-when="view">
+        <div ng-include="'/components/playlists/view-playlist/view-playlist.html'"></div>
+    </div>
+    <div ng-switch-when="new">
+        <div ng-include="'/components/playlists/new-playlist/new-playlist.html'"></div>
+    </div>
+    <div ng-switch-default class="main no-playlist">
+        <h1>No Playlist Selected</h1>
+        <p class="no-content">Please select a playlist from the sidebar</p>
+    </div>
+</div>

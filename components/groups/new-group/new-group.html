@@ -1,0 +1,12 @@
+<div class="main new" ng-controller="NewGroupCtrl">
+    <h1>New Group</h1>
+    <validated-form submit-fn="create" model="group">
+        <form-field model="name"></form-field>
+        <form-field model="description"></form-field>
+        <form-checkbox model="invite_only"></form-checkbox>
+        <form-checkbox model="signage" ng-if="$root.currentAuthority.signage"></form-checkbox>
+        <form-actions>
+            <form-submit>Create</form-submit>
+        </form-actions>
+    </validated-form>
+</div>

@@ -1,0 +1,34 @@
+<div class="categories-wrapper playlists" ng-controller="PlaylistsSidebarCtrl">
+    <h1>
+        Playlists
+        <a class="action" href="#"
+            ng-click="selectNewPlaylist()"
+            ng-if="$root.currentUser.sys_admin || $root.currentUser.grp_admin"
+        >
+            +
+        </a>
+    </h1>
+    <div class="search">
+        <input ng-model="$parent.$parent.playlistsFilter"
+            placeholder="Filter Playlists"
+            type="text"
+            ng-touch="$event.stopPropagation()"
+            user-select="true" 
+            no-capture
+        >
+    </div>
+    <ul ng-if="playlistsTotal"
+        class="categories"
+        infinite-scroll="morePlaylists()"
+        infinite-scroll-disabled="playlistsLoading"
+        infinite-scroll-distance="1.1"
+        infinite-scroll-container="'#sidescroll'"
+    >
+        <li
+            ng-repeat="playlist in playlists | orderBy:['group_name', 'name'] track by playlist.id"
+            ng-class="{selected: selectedPlaylistID == playlist.id}"
+        >
+            <a href="#" ng-click="selectPlaylist(playlist)">{{playlist.group_name}} - {{playlist.name}}</a>
+        </li>
+    </ul>
+</div>

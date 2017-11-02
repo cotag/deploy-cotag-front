@@ -1,0 +1,66 @@
+<div class="uploads main" ng-controller="UploadsCtrl">
+    <header>
+        <h1>Current Uploads</h1> <div class="expires"><label>Expire Uploads:</label> <input type="text" ng-model="delete_at" placeholder="never" name="delete_at" datetimepicker /></div>
+    </header>
+    <div class="condo-uploads-container">
+        <div class="condo-uploads">
+            <div list>
+                <div class="condo-upload ng-cloak" co-upload ng-repeat="file in uploads">
+
+                    <div class="condo-upload-wrapper">
+                        <span ng-if="delete_at" ng-init="file.delete_at = delete_at"></span>
+                        <div class="description">
+                            <table>
+                                <tr>
+                                    <td class="icon image"></td>
+                                    <td class="group" style="width:120px">
+                                        <search-select
+                                            model="file.group_id"
+                                            placeholder="select group"
+                                            source="Group"
+                                            options="query_opts"
+                                        ></search-select>
+                                    </td>
+                                    <td class="name">{{file.dir_path}}{{file.name}}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="stats">
+                            <table>
+                                <tr>
+                                    <td class="controls image" ng-class="{'paused':paused, 'uploading':!paused}" ng-click="playpause(file)"></td>
+                                    <td class="progressbar">
+                                        <div class="progressbar" role="progressbar" aria-live="polite" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="bar" ng-style="{ 'width': progress + '%' }" ></div>
+                                        </div>
+                                    </td>
+                                    <td class="size">{{size}}</td>
+                                    <td ng-click="animate_remove(file, 900)" class="abort image"></td>
+
+                                    <!-- remove for now
+                                    <td ng-click="formVis = !formVis" class="edit image"></td>
+                                    -->
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="expires" ng-if="file.delete_at">
+                            Media expires: {{file.delete_at}}
+                        </div>
+                    </div>
+                    <!-- remove for now
+                    <div class="edit" ng-show="formVis">
+                        <form>
+                            <input name="title" placeholder="title" class="title">
+                            <textarea name="description" placeholder="description" class="description"></textarea>
+
+                            <button type="submit">SAVE</button>
+                        </form>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

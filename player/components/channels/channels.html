@@ -1,0 +1,12 @@
+<div class="channels" ng-switch="panel">
+    <div ng-switch-when="view">
+        <div ng-include="'/components/channels/view-channel/view-channel.html'"></div>
+    </div>
+    <div ng-switch-when="new">
+        <div ng-include="'/components/channels/new-channel/new-channel.html'"></div>
+    </div>
+    <div ng-switch-default class="main no-channel">
+        <h1>No Channel Selected</h1>
+        <p class="no-content">Please select a channel from the sidebar</p>
+    </div>
+</div>

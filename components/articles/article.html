@@ -1,0 +1,34 @@
+<div>
+    <div class="article-info">
+        <div class="content">
+            <h1>{{mediaPlaying.title}}</h1><br />
+
+            <!--
+            <svg class="embed" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="50px" height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+                <circle fill="none" stroke-width="4" stroke-miterlimit="10" cx="25.296" cy="24.553" r="22.212"/>
+                <g>
+                    <path d="M18.724,30.212l-5.66-5.456l5.66-5.48l1.46,1.549l-4.156,3.953l4.156,3.906L18.724,30.212z"/>
+                    <path d="M23.281,34.836h-1.866l4.955-19.672h1.846L23.281,34.836z"/>
+                    <path d="M31.299,30.212l-1.483-1.572l4.155-3.929l-4.155-3.93l1.483-1.505l5.637,5.458L31.299,30.212z"/>
+                </g>
+            </svg>
+            -->
+
+            <svg ng-click="showAirplayOptions($event)" ng-if="airplayAvaliable" class="airplay" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="50px" height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+                <circle fill="none" stroke-width="4" stroke-miterlimit="10" cx="25.296" cy="24.553" r="22.212"/>
+                <polygon points="19.157,32.343 25.609,23.85 32.093,32.343 "/>
+                <polygon points="30.742,28.771 31.673,29.972 35.364,29.972 35.364,18.717 15.886,18.717 15.886,29.972 
+                    19.487,29.972 20.478,28.771 17.176,28.771 17.176,19.918 34.044,19.918 34.044,28.742 "/>
+            </svg>
+
+            <br /><br />
+ 			<p class="description" ng-bind-html="mediaPlaying.description | newlines"></p>
+        </div>
+
+    	<div class="avatar-img-wrapper">
+    		<img title="{{owner.name}}" alt="{{owner.name}}" ng-src="https://www.gravatar.com/avatar/{{owner.email_digest}}?s=55&d=mm" />
+        </div>
+    </div>
+</div>

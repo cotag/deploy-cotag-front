@@ -1,0 +1,15 @@
+<div class="groups" ng-switch="panel">
+    <div ng-switch-when="view">
+        <div ng-include="'/components/groups/view-group/view-group.html'"></div>
+    </div>
+    <div ng-switch-when="new">
+        <div ng-include="'/components/groups/new-group/new-group.html'"></div>
+    </div>
+    <div ng-switch-when="invitations">
+        <div ng-include="'/components/groups/invitations/invitations.html'"></div>
+    </div>
+    <div ng-switch-default class="main no-group">
+        <h1>No Group Selected</h1>
+        <p class="no-content">Please select a group from the sidebar</p>
+    </div>
+</div>

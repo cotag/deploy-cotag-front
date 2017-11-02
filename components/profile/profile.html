@@ -1,0 +1,24 @@
+<div class="main profile">
+    <h1>Your Uploads</h1>
+
+    <ul class="articles preview-view"
+        infinite-scroll="moreArticles()"
+        infinite-scroll-disabled="articlesLoading"
+        infinite-scroll-distance="0.4"
+    >
+        <li ng-repeat="article in articles | orderBy:'-creation_date' track by article.id" ng-if="!article.deleted">
+            <prewatch></prewatch>
+        </li>
+    </ul>
+
+    <div ng-if="!articlesLoading && articles.length === 0" class="no-content">
+        <p>No media found.</p>
+    </div>
+
+    <!--
+        The loading spinner - showing whenever a request is being made
+     -->
+    <div ng-if="articlesLoading">
+        <div class="spinner"></div>
+    </div>
+</div>

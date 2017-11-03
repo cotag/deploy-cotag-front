@@ -1,0 +1,36 @@
+CACHE MANIFEST
+
+CACHE:
+bootstrap.css
+bootstrap.html
+bootstrap.js
+index.html
+login_required.html
+login_success.html
+manifest.json
+oauth-resp.html
+player.js
+styles.css
+branding/favicon/128.png
+branding/favicon/64.png
+branding/favicon/ios_120.png
+branding/favicon/ios_152.png
+branding/favicon/ios_76.png
+branding/favicon/logo_red.svg
+branding/favicon/logo_trans.svg
+branding/favicon/w3c_144.png
+branding/favicon/w3c_192.png
+branding/favicon/w3c_48.png
+branding/favicon/w3c_72.png
+branding/favicon/w3c_96.png
+branding/favicon/win_144.png
+branding/favicon/win_150.png
+branding/favicon/win_310.png
+branding/favicon/win_70.png
+
+NETWORK:
+http://*
+https://*
+*
+
+# hash: 73bbd25b2429c8d28e51274fc161716af04246d33bea3f0601353ce08a973cc0

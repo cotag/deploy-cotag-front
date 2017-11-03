@@ -52,15 +52,18 @@
 
     <!-- Hide content until page is loaded -->
     <style>
-        div#loading {
+        body {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
 
+            padding-top: 4em;
+            text-align: center;
+
             background-color: black;
-            color: black;
+            color: white;
             z-index: 999999;
         }
 
@@ -69,17 +72,22 @@
         }
     </style>
 
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./bootstrap.css">
   </head>
-  <body ng-app="Signage">
-    <!-- Loading Cover -->
-    
+  <body ng-app="AcaBootstrap">
+    <!-- System definition -->
+    <main ng-if="loaded" ng-controller="SetupCtrl">
+        <div>
+            <div>
+                <h1>ACA Signage Setup</h1>
+                <p>Please enter the channel ID below:</p>
+                <input autofocus ng-virtual-keyboard="{kt: 'US International', relative: false, size: 5}" ng-model="channel_id" ng-trim="true" ng-required="true" ng-minlength="5" />
+                <button ng-click="configure(channel_id)">Finish Setup</button>
+            </div>
+        </div>
+    </main>
 
-    <!-- This is where the player is positioned -->
-    <player></player>
-    <analytics></analytics>
 
-
-    <script src="./player.js"></script>
+    <script src="./bootstrap.js"></script>
   </body>
 </html>

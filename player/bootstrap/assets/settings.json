@@ -1,11 +1,11 @@
 {
     "version": "0.1.0",
-    "build": 1536830220000,
+    "build": 1536830520000,
     "env": "prod",
     "debug": true,
     "composer": {
         "domain": "",
-        "route": "/player/bootstrap",
+        "route": "",
         "protocol": "https:",
         "use_domain": true,
         "local_login": false

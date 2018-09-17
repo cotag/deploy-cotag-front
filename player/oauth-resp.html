@@ -29,7 +29,10 @@
         } catch(e) {}
 
         if (window === window.top) {
-          window.location = window.location.protocol + '//' + window.location.host + '/';
+          window.location = window.location.protocol + '//' + window.location.host + '/';          
+          <!-- When using ng6 autologin bootstrap, player on / of domain: 
+          window.location = window.location.protocol + '//' + window.location.host + '/bootstrap/#/' + window.location.hash; 
+          -->
         }
       };
       if (window.addEventListener) {
